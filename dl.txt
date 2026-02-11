@@ -1,0 +1,129 @@
+search01               | [2026-02-11T15:39:16,392][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] Using initIndexWithoutThreadContext method to create index: .plugins-ml-task
+search01               | [2026-02-11T15:39:16,393][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index .plugins-ml-task from [false] to [true]
+search01               | [2026-02-11T15:39:16,393][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating maxThreadCount from [0] to [4] and maxMergeCount from [0] to [9] for index .plugins-ml-task.
+search01               | [2026-02-11T15:39:16,393][INFO ][o.o.i.MergeSchedulerConfig] [search01] Initialized index .plugins-ml-task with maxMergeCount=9, maxThreadCount=4, autoThrottleEnabled=true
+search01               | [2026-02-11T15:39:16,393][INFO ][o.o.p.PluginsService     ] [search01] PluginService:onIndexModule index:[.plugins-ml-task/UoBL4n5PRaKBwYpgIpuJXA]
+search01               | [2026-02-11T15:39:16,402][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index .plugins-ml-task from [true] to [true]
+search01               | [2026-02-11T15:39:16,403][INFO ][o.o.c.m.MetadataCreateIndexService] [search01] [.plugins-ml-task] creating index, cause [api], templates [], shards [1]/[1]
+search01               | [2026-02-11T15:39:16,403][INFO ][o.o.c.r.a.AllocationService] [search01] updating number_of_replicas to [0] for indices [.plugins-ml-task]
+search01               | [2026-02-11T15:39:16,433][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index .plugins-ml-task from [false] to [true]
+search01               | [2026-02-11T15:39:16,433][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating maxThreadCount from [0] to [4] and maxMergeCount from [0] to [9] for index .plugins-ml-task.
+search01               | [2026-02-11T15:39:16,434][INFO ][o.o.i.MergeSchedulerConfig] [search01] Initialized index .plugins-ml-task with maxMergeCount=9, maxThreadCount=4, autoThrottleEnabled=true
+search01               | [2026-02-11T15:39:16,434][INFO ][o.o.p.PluginsService     ] [search01] PluginService:onIndexModule index:[.plugins-ml-task/UoBL4n5PRaKBwYpgIpuJXA]
+search01               | [2026-02-11T15:39:16,442][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index .plugins-ml-task from [true] to [true]
+search01               | [2026-02-11T15:39:16,524][INFO ][o.o.c.r.a.AllocationService] [search01] Cluster health status changed from [YELLOW] to [GREEN] (reason: [shards started [[.plugins-ml-task][0]]]).
+search01               | [2026-02-11T15:39:16,560][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] create index:.plugins-ml-task
+search01               | [2026-02-11T15:39:16,560][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Indexing data object in .plugins-ml-task
+search01               | [2026-02-11T15:39:16,572][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Creation status for id pd1bTZwB-WdjH_QvUvXQ: CREATED
+search01               | [2026-02-11T15:39:16,573][INFO ][o.o.m.t.MLTaskManager    ] [search01] Task creation result: CREATED, Task id: pd1bTZwB-WdjH_QvUvXQ
+Downloading: 100% |========================================| model_meta_list.json  ] [search01]
+Downloading: 100% |========================================| config.json           ] [search01]
+search01               | [2026-02-11T15:39:17,874][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] Using initIndexWithoutThreadContext method to create index: .plugins-ml-model
+search01               | [2026-02-11T15:39:17,875][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Updating pd1bTZwB-WdjH_QvUvXQ from .plugins-ml-task
+search01               | [2026-02-11T15:39:17,875][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index .plugins-ml-model from [false] to [true]
+search01               | [2026-02-11T15:39:17,875][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating maxThreadCount from [0] to [4] and maxMergeCount from [0] to [9] for index .plugins-ml-model.
+search01               | [2026-02-11T15:39:17,875][INFO ][o.o.i.MergeSchedulerConfig] [search01] Initialized index .plugins-ml-model with maxMergeCount=9, maxThreadCount=4, autoThrottleEnabled=true
+search01               | [2026-02-11T15:39:17,875][INFO ][o.o.p.PluginsService     ] [search01] PluginService:onIndexModule index:[.plugins-ml-model/Np54K2wpTQSHOYJ6ELzcLg]
+search01               | [2026-02-11T15:39:17,884][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index .plugins-ml-model from [true] to [true]
+search01               | [2026-02-11T15:39:17,886][INFO ][o.o.c.m.MetadataCreateIndexService] [search01] [.plugins-ml-model] creating index, cause [api], templates [], shards [1]/[1]
+search01               | [2026-02-11T15:39:17,886][INFO ][o.o.c.r.a.AllocationService] [search01] updating number_of_replicas to [0] for indices [.plugins-ml-model]
+search01               | [2026-02-11T15:39:17,899][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Update status for id pd1bTZwB-WdjH_QvUvXQ: UPDATED
+search01               | [2026-02-11T15:39:17,899][INFO ][o.o.m.t.MLTaskManager    ] [search01] Successfully updated the task with ID: pd1bTZwB-WdjH_QvUvXQ
+search01               | [2026-02-11T15:39:17,919][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index .plugins-ml-model from [false] to [true]
+search01               | [2026-02-11T15:39:17,919][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating maxThreadCount from [0] to [4] and maxMergeCount from [0] to [9] for index .plugins-ml-model.
+search01               | [2026-02-11T15:39:17,919][INFO ][o.o.i.MergeSchedulerConfig] [search01] Initialized index .plugins-ml-model with maxMergeCount=9, maxThreadCount=4, autoThrottleEnabled=true
+search01               | [2026-02-11T15:39:17,919][INFO ][o.o.p.PluginsService     ] [search01] PluginService:onIndexModule index:[.plugins-ml-model/Np54K2wpTQSHOYJ6ELzcLg]
+search01               | [2026-02-11T15:39:17,928][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index .plugins-ml-model from [true] to [true]
+search01               | [2026-02-11T15:39:18,011][INFO ][o.o.c.r.a.AllocationService] [search01] Cluster health status changed from [YELLOW] to [GREEN] (reason: [shards started [[.plugins-ml-model][0]]]).
+search01               | [2026-02-11T15:39:18,044][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] create index:.plugins-ml-model
+search01               | [2026-02-11T15:39:18,059][INFO ][o.o.m.m.MLModelManager   ] [search01] create new model meta doc p91bTZwB-WdjH_QvWPWf for register model task pd1bTZwB-WdjH_QvUvXQ
+search01               | [2026-02-11T15:39:21,180][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] Using initIndexWithoutThreadContext method to create index: .plugins-ml-model
+search01               | [2026-02-11T15:39:21,181][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Searching [.plugins-ml-model]
+search01               | [2026-02-11T15:39:21,183][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Search returned 0 hits hits
+Downloading: 100% |========================================| all-distilroberta-v1.zip[search01]
+search01               | [2026-02-11T15:39:31,179][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] Using initIndexWithoutThreadContext method to create index: .plugins-ml-model
+search01               | [2026-02-11T15:39:31,179][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Searching [.plugins-ml-model]
+search01               | [2026-02-11T15:39:31,179][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Search returned 0 hits hits
+search01               | [2026-02-11T15:39:41,179][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] Using initIndexWithoutThreadContext method to create index: .plugins-ml-model
+search01               | [2026-02-11T15:39:41,179][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Searching [.plugins-ml-model]
+search01               | [2026-02-11T15:39:41,180][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Search returned 0 hits hits
+search01               | [2026-02-11T15:39:51,179][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] Using initIndexWithoutThreadContext method to create index: .plugins-ml-model
+search01               | [2026-02-11T15:39:51,180][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Searching [.plugins-ml-model]
+search01               | [2026-02-11T15:39:51,182][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Search returned 0 hits hits
+search01               | [2026-02-11T15:39:53,500][INFO ][o.o.m.m.MLModelManager   ] [search01] Model registered successfully, model id: p91bTZwB-WdjH_QvWPWf, task id: pd1bTZwB-WdjH_QvUvXQ
+search01               | [2026-02-11T15:39:53,501][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Updating p91bTZwB-WdjH_QvWPWf from .plugins-ml-model
+search01               | [2026-02-11T15:39:53,526][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Update status for id p91bTZwB-WdjH_QvWPWf: UPDATED
+search01               | [2026-02-11T15:39:53,527][INFO ][o.o.m.m.MLModelManager   ] [search01] Successfully updated the model with ID: p91bTZwB-WdjH_QvWPWf
+search01               | [2026-02-11T15:39:53,527][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Updating pd1bTZwB-WdjH_QvUvXQ from .plugins-ml-task
+search01               | [2026-02-11T15:39:53,540][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Update status for id pd1bTZwB-WdjH_QvUvXQ: UPDATED
+search01               | [2026-02-11T15:39:53,540][INFO ][o.o.m.t.MLTaskManager    ] [search01] Successfully updated the task with ID: pd1bTZwB-WdjH_QvUvXQ
+search01               | [2026-02-11T15:39:56,697][DEPRECATION][o.o.d.r.RestController   ] [search01] [POST /_plugins/_ml/models/{model_id}/_load] is deprecated! Use [POST /_plugins/_ml/models/{model_id}/_deploy] instead.
+search01               | [2026-02-11T15:39:56,700][INFO ][o.o.m.a.d.TransportDeployModelAction] [search01] Starting model deployment for model: p91bTZwB-WdjH_QvWPWf
+search01               | [2026-02-11T15:39:56,700][INFO ][o.o.m.a.d.TransportDeployModelAction] [search01] Will deploy model on these nodes: KFKqEThRRjSKJN3fuSeacg
+search01               | [2026-02-11T15:39:56,701][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] Using initIndexWithoutThreadContext method to create index: .plugins-ml-task
+search01               | [2026-02-11T15:39:56,701][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Indexing data object in .plugins-ml-task
+search01               | [2026-02-11T15:39:56,722][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Creation status for id qN1bTZwB-WdjH_Qv7_Wd: CREATED
+search01               | [2026-02-11T15:39:56,722][INFO ][o.o.m.t.MLTaskManager    ] [search01] Task creation result: CREATED, Task id: qN1bTZwB-WdjH_Qv7_Wd
+search01               | [2026-02-11T15:39:56,725][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Updating p91bTZwB-WdjH_QvWPWf from .plugins-ml-model
+search01               | [2026-02-11T15:39:56,739][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Update status for id p91bTZwB-WdjH_QvWPWf: UPDATED
+search01               | [2026-02-11T15:39:56,739][INFO ][o.o.m.m.MLModelManager   ] [search01] Successfully updated the model with ID: p91bTZwB-WdjH_QvWPWf
+search01               | [2026-02-11T15:39:56,742][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Updating qN1bTZwB-WdjH_Qv7_Wd from .plugins-ml-task
+search01               | [2026-02-11T15:39:56,745][ERROR][o.o.m.m.MLModelManager   ] [search01] No controller is deployed because the model p91bTZwB-WdjH_QvWPWf is expected not having an enabled model controller. Please use the create model controller api to create one if this is unexpected.
+search01               | [2026-02-11T15:39:56,758][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Update status for id qN1bTZwB-WdjH_Qv7_Wd: UPDATED
+search01               | [2026-02-11T15:39:56,759][INFO ][o.o.m.t.MLTaskManager    ] [search01] Successfully updated the task with ID: qN1bTZwB-WdjH_Qv7_Wd
+search01               | [2026-02-11T15:40:00,303][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index fess_log.search_log from [false] to [true]
+search01               | [2026-02-11T15:40:00,304][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating maxThreadCount from [0] to [4] and maxMergeCount from [0] to [9] for index fess_log.search_log.
+search01               | [2026-02-11T15:40:00,304][INFO ][o.o.i.MergeSchedulerConfig] [search01] Initialized index fess_log.search_log with maxMergeCount=9, maxThreadCount=4, autoThrottleEnabled=true
+search01               | [2026-02-11T15:40:00,306][INFO ][o.o.p.PluginsService     ] [search01] PluginService:onIndexModule index:[fess_log.search_log/C4XFdjKWSqaUxQFR5yLJTA]
+search01               | [2026-02-11T15:40:00,319][INFO ][o.o.c.m.MetadataMappingService] [search01] [fess_log.search_log/C4XFdjKWSqaUxQFR5yLJTA] update_mapping [_doc]
+search01               | [2026-02-11T15:40:00,389][DEPRECATION][o.o.d.c.m.IndexNameExpressionResolver] [search01] this request accesses system indices: [.plugins-ml-model], but in a future major version, direct access to system indices will be prevented by default
+search01               | [2026-02-11T15:40:00,389][DEPRECATION][o.o.d.c.m.IndexNameExpressionResolver] [search01] this request accesses system indices: [.plugins-ml-model-group], but in a future major version, direct access to system indices will be prevented by default
+search01               | [2026-02-11T15:40:00,389][DEPRECATION][o.o.d.c.m.IndexNameExpressionResolver] [search01] this request accesses system indices: [.plugins-ml-task], but in a future major version, direct access to system indices will be prevented by default
+search01               | [2026-02-11T15:40:01,181][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] Using initIndexWithoutThreadContext method to create index: .plugins-ml-model
+search01               | [2026-02-11T15:40:01,181][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Searching [.plugins-ml-model]
+search01               | [2026-02-11T15:40:01,183][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Search returned 1 hits hits
+search01               | [2026-02-11T15:40:03,662][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index top_queries-2026.02.11-95552 from [false] to [true]
+search01               | [2026-02-11T15:40:03,662][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating maxThreadCount from [0] to [4] and maxMergeCount from [0] to [9] for index top_queries-2026.02.11-95552.
+search01               | [2026-02-11T15:40:03,662][INFO ][o.o.i.MergeSchedulerConfig] [search01] Initialized index top_queries-2026.02.11-95552 with maxMergeCount=9, maxThreadCount=4, autoThrottleEnabled=true
+search01               | [2026-02-11T15:40:03,662][INFO ][o.o.p.PluginsService     ] [search01] PluginService:onIndexModule index:[top_queries-2026.02.11-95552/NADhd1YcQ7SOPEkJ-8ZSfw]
+search01               | [2026-02-11T15:40:03,673][INFO ][o.o.c.m.MetadataMappingService] [search01] [top_queries-2026.02.11-95552/NADhd1YcQ7SOPEkJ-8ZSfw] update_mapping [_doc]
+search01               | [2026-02-11T15:40:03,718][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index top_queries-2026.02.11-95552 from [false] to [true]
+search01               | [2026-02-11T15:40:03,718][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating maxThreadCount from [0] to [4] and maxMergeCount from [0] to [9] for index top_queries-2026.02.11-95552.
+search01               | [2026-02-11T15:40:03,718][INFO ][o.o.i.MergeSchedulerConfig] [search01] Initialized index top_queries-2026.02.11-95552 with maxMergeCount=9, maxThreadCount=4, autoThrottleEnabled=true
+search01               | [2026-02-11T15:40:03,719][INFO ][o.o.p.PluginsService     ] [search01] PluginService:onIndexModule index:[top_queries-2026.02.11-95552/NADhd1YcQ7SOPEkJ-8ZSfw]
+search01               | [2026-02-11T15:40:03,736][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index top_queries-2026.02.11-95552 from [false] to [true]
+search01               | [2026-02-11T15:40:03,736][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating maxThreadCount from [0] to [4] and maxMergeCount from [0] to [9] for index top_queries-2026.02.11-95552.
+search01               | [2026-02-11T15:40:03,736][INFO ][o.o.i.MergeSchedulerConfig] [search01] Initialized index top_queries-2026.02.11-95552 with maxMergeCount=9, maxThreadCount=4, autoThrottleEnabled=true
+search01               | [2026-02-11T15:40:03,737][INFO ][o.o.p.PluginsService     ] [search01] PluginService:onIndexModule index:[top_queries-2026.02.11-95552/NADhd1YcQ7SOPEkJ-8ZSfw]
+search01               | [2026-02-11T15:40:03,757][INFO ][o.o.c.m.MetadataMappingService] [search01] [top_queries-2026.02.11-95552/NADhd1YcQ7SOPEkJ-8ZSfw] update_mapping [_doc]
+search01               | [2026-02-11T15:40:03,797][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating autoThrottle for index top_queries-2026.02.11-95552 from [false] to [true]
+search01               | [2026-02-11T15:40:03,797][INFO ][o.o.i.MergeSchedulerConfig] [search01] Updating maxThreadCount from [0] to [4] and maxMergeCount from [0] to [9] for index top_queries-2026.02.11-95552.
+search01               | [2026-02-11T15:40:03,797][INFO ][o.o.i.MergeSchedulerConfig] [search01] Initialized index top_queries-2026.02.11-95552 with maxMergeCount=9, maxThreadCount=4, autoThrottleEnabled=true
+search01               | [2026-02-11T15:40:03,798][INFO ][o.o.p.PluginsService     ] [search01] PluginService:onIndexModule index:[top_queries-2026.02.11-95552/NADhd1YcQ7SOPEkJ-8ZSfw]
+fess01                 | {"@timestamp":"2026-02-11T15:40:02.933Z","log.level": "INFO","message":"Successfully registered 2 regex pattern(s) with component: playwrightClient", "ecs.version": "1.2.0","service.name":"fess","event.dataset":"thumbnail","process.thread.name":"main","log.logger":"org.codelibs.fess.crawler.client.http.PlaywrightClientCreator"}
+fess01                 | {"@timestamp":"2026-02-11T15:40:03.113Z","log.level": "INFO","message":"No thumbnail tasks to process.", "ecs.version": "1.2.0","service.name":"fess","event.dataset":"thumbnail","process.thread.name":"main","log.logger":"org.codelibs.fess.exec.ThumbnailGenerator"}
+search01               | [2026-02-11T15:40:05,165][INFO ][a.d.p.j.LibUtils         ] [search01] Downloading https://publish.djl.ai/pytorch/2.5.1/cpu-precxx11/linux-x86_64/native/lib/libgomp-a34b3233.so.1.gz ...
+search01               | [2026-02-11T15:40:05,682][INFO ][a.d.p.j.LibUtils         ] [search01] Downloading https://publish.djl.ai/pytorch/2.5.1/cpu-precxx11/linux-x86_64/native/lib/libc10.so.gz ...
+search01               | [2026-02-11T15:40:06,201][INFO ][a.d.p.j.LibUtils         ] [search01] Downloading https://publish.djl.ai/pytorch/2.5.1/cpu-precxx11/linux-x86_64/native/lib/libtorch_cpu.so.gz ...
+search01               | [2026-02-11T15:40:09,487][INFO ][a.d.p.j.LibUtils         ] [search01] Downloading https://publish.djl.ai/pytorch/2.5.1/cpu-precxx11/linux-x86_64/native/lib/libtorch.so.gz ...
+search01               | [2026-02-11T15:40:10,022][INFO ][a.d.p.j.LibUtils         ] [search01] Downloading https://publish.djl.ai/pytorch/2.5.1/cpu-precxx11/linux-x86_64/native/lib/libstdc%2B%2B.so.6.gz ...
+search01               | [2026-02-11T15:40:11,180][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] Using initIndexWithoutThreadContext method to create index: .plugins-ml-model
+search01               | [2026-02-11T15:40:11,180][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Searching [.plugins-ml-model]
+search01               | [2026-02-11T15:40:11,182][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Search returned 1 hits hits
+search01               | [2026-02-11T15:40:11,293][INFO ][a.d.p.j.LibUtils         ] [search01] Downloading jni https://publish.djl.ai/pytorch/2.5.1/jnilib/0.31.1/linux-x86_64/cpu-precxx11/libdjl_torch.so to cache ...
+search01               | [2026-02-11T15:40:12,955][INFO ][a.d.p.e.PtEngine         ] [search01] PyTorch graph executor optimizer is enabled, this may impact your inference latency and throughput. See: https://docs.djl.ai/master/docs/development/inference_performance_optimization.html#graph-executor-optimization
+search01               | [2026-02-11T15:40:12,955][INFO ][a.d.p.e.PtEngine         ] [search01] Number of inter-op threads is 1
+search01               | [2026-02-11T15:40:12,955][INFO ][a.d.p.e.PtEngine         ] [search01] Number of intra-op threads is 1
+search01               | [2026-02-11T15:40:13,182][INFO ][a.d.u.Platform           ] [search01] Found matching platform from: jar:file:/usr/share/opensearch/plugins/opensearch-ml/tokenizers-0.31.1.jar!/native/lib/tokenizers.properties
+search01               | [2026-02-11T15:40:13,182][INFO ][a.d.h.t.j.LibUtils       ] [search01] Extracting native/lib/linux-x86_64/cpu/libtokenizers.so to cache ...
+search01               | [2026-02-11T15:40:13,405][INFO ][o.o.m.e.a.DLModel        ] [search01] Model p91bTZwB-WdjH_QvWPWf is successfully deployed on 1 devices
+search01               | [2026-02-11T15:40:13,432][INFO ][o.o.m.a.MLModelAutoReDeployer] [search01] No models needs to be auto redeployed!
+search01               | [2026-02-11T15:40:13,443][INFO ][o.o.m.a.f.TransportForwardAction] [search01] deploy model done with state: DEPLOYED, model id: p91bTZwB-WdjH_QvWPWf
+search01               | [2026-02-11T15:40:13,443][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Updating p91bTZwB-WdjH_QvWPWf from .plugins-ml-model
+search01               | [2026-02-11T15:40:13,444][INFO ][o.o.m.a.d.TransportDeployModelOnNodeAction] [search01] deploy model task done qN1bTZwB-WdjH_Qv7_Wd
+search01               | [2026-02-11T15:40:13,450][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Updating qN1bTZwB-WdjH_Qv7_Wd from .plugins-ml-task
+search01               | [2026-02-11T15:40:13,470][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Update status for id qN1bTZwB-WdjH_Qv7_Wd: UPDATED
+search01               | [2026-02-11T15:40:13,470][INFO ][o.o.m.t.MLTaskManager    ] [search01] Successfully updated the task with ID: qN1bTZwB-WdjH_Qv7_Wd
+search01               | [2026-02-11T15:40:13,485][INFO ][o.o.r.m.c.i.LocalClusterIndicesClient] [search01] Update status for id p91bTZwB-WdjH_QvWPWf: UPDATED
+search01               | [2026-02-11T15:40:13,485][INFO ][o.o.m.m.MLModelManager   ] [search01] Successfully updated the model with ID: p91bTZwB-WdjH_QvWPWf
+search01               | [2026-02-11T15:40:21,181][INFO ][o.o.m.e.i.MLIndicesHandler] [search01] Using initIndexWithoutThreadContext method to create index: .plugins-ml-model
