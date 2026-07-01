@@ -1,0 +1,101 @@
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.templeting import Jinja2Templates
+from pydantic import BaseModel
+from neo4j import GraphDatabase
+import requests
+import json
+
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+
+# 固定の接続先設定 (k8sクラスター内通信用)
+NEO4J_URI = "bolt://neo4j-service.neo4j.svc.cluster.local:7687"
+NEO4J_AUTH = ("neo4j", "your-strong-password")
+NEO4J_BROWSER_URL = "http://your-domain.com"  # 外部からアクセス可能なURL
+
+LLM_API_URL = "http://cluster.local"
+
+class ChatRequest(BaseModel):
+    prompt: str
+
+def fetch_graph_schema():
+    """Neo4jからノード種別と、ノード間のリレーション関係（スキーマ）を動的に抽出する"""
+    labels = []
+    relationships = []
+    try:
+        with GraphDatabase.driver(NEO4J_URI, auth=NEO4J_AUTH) as driver:
+            with driver.session() as session:
+                # 1. ノード種別の取得
+                label_result = session.run("CALL db.labels()")
+                labels = [record["label"] for record in label_result]
+                
+                # 2. リレーションパターンの取得 (LLMの精度を劇的に上げる)
+                rel_query = """
+                MATCH (n)-[r]->(m) 
+                WITH labels(n)[0] AS source, type(r) AS rel, labels(m)[0] AS target
+                RETURN DISTINCT source, rel, target LIMIT 30
+                """
+                rel_result = session.run(rel_query)
+                for record in rel_result:
+                    if record["source"] and record["target"]:
+                        relationships.append(f"({record['source']})-[:{record['rel']}]->({record['target']})")
+    except Exception as e:
+        print(f"Schema fetch error: {e}")
+        labels = ["User", "NodeA", "NodeB"]  # フォールバック
+        relationships = ["(User)-[:CONNECTS]->(NodeA)"]
+        
+    return {"labels": labels, "relationships": relationships}
+
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    schema = fetch_graph_schema()
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "labels": schema["labels"],
+        "relationships": schema["relationships"],
+        "neo4j_url": NEO4J_BROWSER_URL
+    })
+
+@app.post("/api/chat")
+async def chat_api(payload: ChatRequest):
+    schema = fetch_graph_schema()
+    
+    # 抽出したグラフ構造をベースに、厳密なシステムプロンプトを構築
+    system_prompt = (
+        "You are an expert Neo4j graph database developer.\n"
+        "Generate a valid Cypher query based on the user request and the following database schema.\n"
+        f"Available Node Labels: {json.dumps(schema['labels'])}\n"
+        f"Known Relationship Patterns: {json.dumps(schema['relationships'])}\n\n"
+        "Instructions:\n"
+        "- Reply ONLY with the Cypher query inside a markdown code block (```cypher ... ```).\n"
+        "- Do not include any explanations outside the code block.\n"
+        "- If path/hop execution is requested, use shortestPath() or variable-length relationships like `*1..2` accurately."
+    )
+
+    try:
+        response = requests.post(LLM_API_URL, json={
+            "model": "your-model",
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": payload.prompt}
+            ],
+            "temperature": 0.1
+        }, timeout=30)
+        
+        llm_output = response.json()["choices"]["message"]["content"].strip()
+        
+        # ```cypher ... ``` からクエリ本体を抽出
+        if "```" in llm_output:
+            query = llm_output.split("```")[1]
+            if query.startswith("cypher"):
+                query = query[6:]
+            elif query.startswith("neo4j"):
+                query = query[5:]
+        else:
+            query = llm_output
+
+        return JSONResponse({"success": True, "query": query.strip()})
+    
+    except Exception as e:
+        return JSONResponse({"success": False, "error": str(e)}, status_code=500)
