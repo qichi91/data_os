@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Neo4j AI Copilot Copilot</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { display: flex; flex-direction: column; height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; background: #111827; }
+        
+        /* 上部: 必要最小限のヘッダー・プルダウン */
+        .header { height: 45px; background: #1f2937; color: #f3f4f6; display: flex; align-items: center; padding: 0 15px; gap: 15px; border-bottom: 1px solid #374151; z-index: 10; }
+        .header-title { font-size: 14px; font-weight: 600; color: #3b82f6; }
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-btn { background: #374151; color: #f3f4f6; border: 1px solid #4b5563; padding: 4px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; }
+        .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background-color: #1f2937; min-width: 240px; box-shadow: 0px 8px 16px rgba(0,0,0,0.5); border: 1px solid #4b5563; border-radius: 4px; padding: 10px; z-index: 100; max-height: 300px; overflow-y: auto; }
+        .dropdown:hover .dropdown-content { display: block; }
+        .schema-item { font-size: 12px; padding: 4px 0; border-bottom: 1px solid #374151; color: #d1d5db; font-family: monospace; }
+
+        /* メインエリア */
+        .workspace { display: flex; flex: 1; position: relative; overflow: hidden; }
+
+        /* 左カラム: 開閉式サイドバー */
+        .sidebar { width: 380px; background: #111827; border-right: 1px solid #374151; display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 5; height: 100%; }
+        .sidebar.collapsed { transform: translateX(-380px); position: absolute; }
+        
+        /* サイドバー開閉トグルボタン */
+        .toggle-btn { position: absolute; left: 380px; top: 50%; transform: translateY(-50%); background: #3b82f6; color: white; border: none; padding: 15px 8px; border-radius: 0 6px 6px 0; cursor: pointer; z-index: 6; font-size: 12px; transition: left 0.3s ease; box-shadow: 2px 0 5px rgba(0,0,0,0.3); }
+        .sidebar.collapsed + .toggle-btn { left: 0; }
+
+        /* チャット内コンポーネント */
+        .chat-container { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .chat-title { color: #fff; font-size: 14px; font-weight: bold; border-bottom: 1px solid #374151; padding-bottom: 8px; }
+        .query-box-wrapper { display: none; background: #1e1e1e; border: 1px solid #22c55e; border-radius: 6px; padding: 12px; margin-top: 10px; }
+        .query-box { color: #4ade80; font-family: 'Fira Code', monospace; font-size: 12px; white-space: pre-wrap; word-break: break-all; max-height: 200px; overflow-y: auto; }
+        
+        .form-area { padding: 15px; background: #1f2937; border-top: 1px solid #374151; }
+        .form-area textarea { width: 100%; height: 90px; padding: 10px; background: #111827; color: white; border: 1px solid #4b5563; border-radius: 6px; resize: none; margin-bottom: 10px; font-size: 13px; }
+        .form-area textarea::placeholder { color: #6b7280; }
+        
+        .btn { width: 100%; padding: 8px; border: none; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; }
+        .btn-submit { background: #2563eb; color: white; }
+        .btn-submit:disabled { background: #4b5563; cursor: not-allowed; }
+        .btn-apply { background: #10b981; color: white; margin-top: 8px; display: none; }
+
+        /* 右カラム: Neo4j Browser (全画面ベース) */
+        .browser-area { flex: 1; height: 100%; background: #000; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+    <!-- 上部: プルダウン式スキーマ確認 -->
+    <div class="header">
+        <div class="header-title">Neo4j AI Copilot</div>
+        
+        <div class="dropdown">
+            <button class="dropdown-btn">ノード種別 ▼</button>
+            <div class="dropdown-content">
+                {% for label in labels %}
+                    <div class="schema-item">🏷️ :{{ label }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="dropdown-btn">関係性パターン ▼</button>
+            <div class="dropdown-content">
+                {% for rel in relationships %}
+                    <div class="schema-item">🔗 {{ rel }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <!-- 左カラム: チャット画面 -->
+        <div class="sidebar" id="sidebar">
+            <div class="chat-container">
+                <div class="chat-title">LLM Cypher Assistant</div>
+                <div style="font-size: 12px; color: #9ca3af;">
+                    例：「AからBへのつながりを出して。また、最短経路だけでなく、1passで経由したらつながるノードは全部だして。」
+                </div>
+                
+                <!-- 生成されたクエリの表示領域 -->
+                <div class="query-box-wrapper" id="queryWrapper">
+                    <div style="font-size: 11px; color: #22c55e; margin-bottom: 5px; font-weight: bold;">生成されたCypher:</div>
+                    <div class="query-box" id="queryText"></div>
+                    <button class="btn btn-apply" id="btnApply" onclick="applyQueryToBrowser()">Neo4j Browserにセット</button>
+                </div>
+            </div>
+            
+            <div class="form-area">
+                <textarea id="promptInput" placeholder="グラフへの要求を入力してください..."></textarea>
+                <button type="button" class="btn btn-submit" id="btnSubmit" onclick="generateQuery()">クエリを生成</button>
+            </div>
+        </div>
+
+        <!-- サイドバー開閉用トグルボタン -->
+        <button class="toggle-btn" id="toggleBtn" onclick="toggleSidebar()">◀<br>閉<br>じ<br>る</button>
+
+        <!-- 右カラム: Neo4j Browser -->
+        <div class="browser-area">
+            <iframe id="neo4jBrowser" src="{{ neo4j_url }}"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // サイドバーの開閉制御
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('toggleBtn');
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+                toggleBtn.innerHTML = "◀<br>閉<br>じ<br>る";
+            } else {
+                sidebar.classList.add('collapsed');
+                toggleBtn.innerHTML = "▶<br>チ<br>ャ<br>ッ<br>ト";
+            }
+        }
+
+        // 非同期通信(Fetch)によるクエリ生成処理
+        async function generateQuery() {
+            const promptInput = document.getElementById('promptInput');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const queryWrapper = document.getElementById('queryWrapper');
+            const queryText = document.getElementById('queryText');
+            const btnApply = document.getElementById('btnApply');
+
+            if (!promptInput.value.trim()) return;
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "生成中...";
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: promptInput.value })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    queryText.innerText = data.query;
+                    queryWrapper.style.display = 'block';
+                    btnApply.style.style.display = 'block';
+                } else {
+                    queryText.innerText = "// エラーが発生しました:\n" + data.error;
+                    queryWrapper.style.display = 'block';
+                }
+            } catch (err) {
+                queryText.innerText = "// 通信エラーが発生しました";
+                queryWrapper.style.display = 'block';
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = "クエリを生成";
+            }
+        }
+
+        // 生成クエリをiframe内のNeo4j Browserに受け渡す
+        function applyQueryToBrowser() {
+            const query = document.getElementById('queryText').innerText;
+            const baseUrl = "{{ neo4j_url }}";
+            
+            // Neo4j Browserの「cmd=edit」引数仕様を使ってエディタへ注入
+            const encodedQuery = encodeURIComponent(query);
+            const targetUrl = `${baseUrl}?cmd=edit&script=${encodedQuery}`;
+            
+            document.getElementById('neo4jBrowser').src = targetUrl;
+        }
+    </script>
+</body>
+</html>
