@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>スクロール静止シーン 抽出＆一括コピーツール</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        
+        /* 4. 最上部のボタン配置エリア */
+        .top-toolbar { position: sticky; top: 0; background: white; padding: 15px 0; border-bottom: 2px solid #007bff; display: flex; gap: 12px; z-index: 100; margin-bottom: 20px; }
+        .btn { padding: 12px 20px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .btn-excel { background: #217346; color: white; } /* Excelカラー */
+        .btn-excel:hover { background: #1a5c38; }
+        .btn-onenote { background: #5c2d91; color: white; } /* OneNoteカラー */
+        .btn-onenote:hover { background: #4a2475; }
+        .btn-analyze { background: #007bff; color: white; margin-left: auto; }
+        .btn-analyze:hover { background: #0056b3; }
+        
+        .file-section { margin-bottom: 20px; background: #e9ecef; padding: 15px; border-radius: 6px; display: flex; align-items: center; gap: 15px; }
+        video { width: 100%; max-height: 400px; border: 1px solid #ccc; background: #000; border-radius: 4px; }
+        
+        /* 3. 抽出画像の縦並び表示（リスト形式） */
+        .gallery { margin-top: 25px; display: flex; flex-direction: column; gap: 20px; }
+        .scene-card { display: flex; gap: 20px; border: 1px solid #dee2e6; padding: 15px; border-radius: 6px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .scene-media { flex: 0 0 400px; }
+        .scene-media img { width: 100%; border: 1px solid #ddd; border-radius: 4px; display: block; }
+        .scene-info { font-size: 12px; color: #666; margin-top: 5px; font-weight: bold; }
+        
+        /* コメント領域 */
+        .scene-comment { flex: 1; display: flex; flex-direction: column; }
+        .scene-comment label { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #495057; }
+        .scene-comment textarea { flex: 1; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; resize: none; font-size: 14px; font-family: inherit; }
+        
+        #status { font-weight: bold; color: #495057; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 4. 画面の最上部にボタンを配置 -->
+    <div class="top-toolbar">
+        <button id="copyExcelBtn" class="btn btn-excel">📋 2列の表形式でコピー (Excel/OneNote用)</button>
+        <button id="copyOneNoteBtn" class="btn btn-onenote">📋 画像のみ縦並びでコピー (OneNote用)</button>
+        <span id="status" style="align-self: center; margin-left: 15px;">動画ファイルを選択してください</span>
+        <button id="analyzeBtn" class="btn btn-analyze">⚡ 自動解析スタート</button>
+    </div>
+
+    <div class="file-section">
+        <input type="file" id="fileInput" accept="video/*">
+    </div>
+    
+    <video id="videoPlayer" controls></video>
+    
+    <h3>📸 抽出された静止画面リスト</h3>
+    <div class="gallery" id="gallery"></div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const video = document.getElementById('videoPlayer');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const gallery = document.getElementById('gallery');
+const statusText = document.getElementById('status');
+
+let prevImageData = null;
+let isMoving = false;
+
+// 解析の調整パラメーター
+const MOVEMENT_THRESHOLD = 15; // 動き検知のしきい値
+const STEP_TIME = 0.2; // 0.2秒ずつスキップして高速解析
+
+// 1 & 2. 動画ファイルを開いた（選択した）とき、前回の結果をクリアして動画をセット
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        // 前回の抽出結果・状態を完全にクリア
+        gallery.innerHTML = ""; 
+        prevImageData = null;
+        isMoving = false;
+        
+        // 動画の読み込み
+        video.src = URL.createObjectURL(file);
+        statusText.textContent = "前回のデータをクリアしました。解析スタートを押してください。";
+    }
+});
+
+// 解析実行
+analyzeBtn.addEventListener('click', () => {
+    if (!video.src) return alert('動画ファイルを読み込んでください');
+    
+    statusText.textContent = "解析中...（高速スキップ中）";
+    gallery.innerHTML = ""; // ボタン押下時も念のためクリア
+    video.pause();
+    video.currentTime = 0;
+    prevImageData = null;
+    isMoving = false;
+
+    video.onseeked = function() {
+        analyzeFrame();
+    };
+    analyzeFrame();
+});
+
+// フレーム解析ロジック（動きが止まった瞬間を検知）
+function analyzeFrame() {
+    if (video.currentTime >= video.duration) {
+        statusText.textContent = "解析完了！コメントを入力してコピーしてください。";
+        video.onseeked = null;
+        return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 320;
+    canvas.height = 180;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    if (prevImageData) {
+        let totalDiff = 0;
+        const data1 = prevImageData.data;
+        const data2 = currentImageData.data;
+        
+        for (let i = 0; i < data1.length; i += 16) {
+            const diffR = Math.abs(data1[i] - data2[i]);
+            const diffG = Math.abs(data1[i+1] - data2[i+1]);
+            const diffB = Math.abs(data1[i+2] - data2[i+2]);
+            totalDiff += (diffR + diffG + diffB) / 3;
+        }
+        const averageDiff = totalDiff / (data1.length / 16);
+
+        if (averageDiff > MOVEMENT_THRESHOLD) {
+            isMoving = true;
+        } else {
+            if (isMoving) {
+                captureHighResScene(); // 静止した瞬間をキャプチャ
+                isMoving = false;
+            }
+        }
+    }
+
+    prevImageData = currentImageData;
+    video.currentTime += STEP_TIME;
+}
+
+// 3. 高解像度キャプチャを生成し、コメント領域付きで縦に並べる
+function captureHighResScene() {
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    const dataURL = canvas.toDataURL('image/jpeg', 0.8);
+    const timestamp = Math.floor(video.currentTime);
+    
+    // カード型の親要素を作成
+    const card = document.createElement('div');
+    card.className = 'scene-card';
+    
+    // 左側：画像と情報
+    const mediaDiv = document.createElement('div');
+    mediaDiv.className = 'scene-media';
+    const img = document.createElement('img');
+    img.src = dataURL;
+    img.className = 'target-img';
+    const info = document.createElement('div');
+    info.className = 'scene-info';
+    info.textContent = `⏱ タイムスタンプ: ${timestamp}秒付近`;
+    mediaDiv.appendChild(img);
+    mediaDiv.appendChild(info);
+    
+    // 右側：コメント入力領域
+    const commentDiv = document.createElement('div');
+    commentDiv.className = 'scene-comment';
+    const label = document.createElement('label');
+    label.textContent = "このシーンへのコメント・議事録メモ:";
+    const textarea = document.createElement('textarea');
+    textarea.className = 'target-comment';
+    textarea.placeholder = "ここにExcelやOneNoteに一緒に送りたいメモを入力してください...";
+    commentDiv.appendChild(label);
+    commentDiv.appendChild(textarea);
+    
+    card.appendChild(mediaDiv);
+    card.appendChild(commentDiv);
+    gallery.appendChild(card);
+}
+
+// --- クリップボード一括コピー処理（2パターン） ---
+
+// パターンA: 2列の表形式でコピー (Excelのセルに画像とテキストを分ける用)
+document.getElementById('copyExcelBtn').addEventListener('click', async () => {
+    const cards = document.querySelectorAll('.scene-card');
+    if (cards.length === 0) return alert('抽出された画像がありません');
+
+    // ExcelやOneNoteが「表」として認識できるように <table> タグを組み立てる
+    let htmlContent = '<table border="1" style="border-collapse:collapse; width:100%;">';
+    cards.forEach((card) => {
+        const imgSrc = card.querySelector('.target-img').src;
+        const commentText = card.querySelector('.target-comment').value.replace(/\n/g, '<br>'); // 改行対応
+        
+        htmlContent += '<tr>';
+        // 1列目: 画像
+        htmlContent += `<td style="padding:10px; width:400px; vertical-align:top;"><img src="${imgSrc}" style="width:100%; display:block;" /></td>`;
+        // 2列目: コメント
+        htmlContent += `<td style="padding:10px; vertical-align:top; font-size:14px;">${commentText}</td>`;
+        htmlContent += '</tr>';
+    });
+    htmlContent += '</table>';
+
+    await copyToClipboardAsHtml(htmlContent, `${cards.length}枚のシーンを表形式(2列)でコピーしました！`);
+});
+
+// パターンB: 画像のみ縦に並べてコピー (OneNoteで画像だけをパラパラ見たい用)
+document.getElementById('copyOneNoteBtn').addEventListener('click', async () => {
+    const imgs = document.querySelectorAll('.target-img');
+    if (imgs.length === 0) return alert('抽出された画像がありません');
+
+    let htmlContent = '<div>';
+    imgs.forEach((img) => {
+        htmlContent += `<img src="${img.src}" style="max-width:100%; display:block; margin-bottom:15px;" /><br />`;
+    });
+    htmlContent += '</div>';
+
+    await copyToClipboardAsHtml(htmlContent, `${imgs.length}枚の画像のみを縦並びでコピーしました！`);
+});
+
+// クリップボードへHTML形式で書き込む共通関数
+async function copyToClipboardAsHtml(htmlText, successMessage) {
+    const blob = new Blob([htmlText], { type: 'text/html' });
+    const clipboardItem = new ClipboardItem({ 'text/html': blob });
+
+    try {
+        await navigator.clipboard.write([clipboardItem]);
+        alert(successMessage + "\nExcelまたはOneNoteを開いて Ctrl + V で貼り付けてください。");
+    } catch (err) {
+        console.error('コピー失敗:', err);
+        alert('ブラウザの制限によりコピーに失敗しました。');
+    }
+}
+</script>
+
+</body>
+</html>
